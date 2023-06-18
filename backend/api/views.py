@@ -1,22 +1,25 @@
-from .models import Employee
-from .serializers import EmployeeSerializer
+from .serializers import  UserSerializer,MyTokenObtainPairSerializer
+from .models import User
 from rest_framework.views import APIView
+from rest_framework.generics import  ListCreateAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView
 from rest_framework.response import Response
-
-class EmployeeView(APIView):
-
-    def get(self,request):
-        output = [
-            {"name":output.name,
-             "department":output.department} 
-            for output in Employee.objects.all()
-            ]
-        return Response(output)
-    
-    def post(self,request):
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True): 
-            serializer.save()
-        return Response(serializer.data)
+from rest_framework_simplejwt.views import TokenObtainPairView
 
     
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+class UserRegister(CreateAPIView):
+    serializer_class = UserSerializer
+
+class UserList(ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetails(RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'id'
+
+
+
