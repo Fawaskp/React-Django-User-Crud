@@ -3,7 +3,7 @@ import React from 'react'
 import { getLocal } from '../helpers/auth'
 import Home from '../components/home/home'
 import Login from './login/Login'
-import Admin from '../components/admin/admin'
+import Admin from './admin/Admin'
 import jwt_decode from 'jwt-decode'
 
 export function PrivateRoute() {
@@ -12,12 +12,11 @@ export function PrivateRoute() {
 
   if (response){
     const decoded = jwt_decode(response)
-
-    if (decoded.is_superuser){
+    
+    if (decoded.is_admin){
         return <Admin/>
     }
     else{
-      console.log("pottanaayirunnu njaan");
         return <Home/>
     }
 

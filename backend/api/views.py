@@ -1,9 +1,8 @@
 from .serializers import  UserSerializer,MyTokenObtainPairSerializer
 from .models import User
-from rest_framework.views import APIView
 from rest_framework.generics import  ListCreateAPIView,RetrieveUpdateDestroyAPIView,CreateAPIView
-from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.filters import SearchFilter
 
     
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -13,8 +12,10 @@ class UserRegister(CreateAPIView):
     serializer_class = UserSerializer
 
 class UserList(ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.all().exclude(is_superuser=True)
     serializer_class = UserSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['email', 'username']
 
 class UserDetails(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()

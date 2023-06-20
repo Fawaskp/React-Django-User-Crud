@@ -17,6 +17,13 @@ class UserSerializer(ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    
+    def update(self, instance, validated_data):
+        password = validated_data.get('password')
+        if password is None:
+            validated_data.pop('password', None)
+
+        return super().update(instance, validated_data)
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -24,6 +31,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         token['username'] = user.username
+        token['email'] = user.email
         token['is_admin'] = user.is_superuser
         
         return token
